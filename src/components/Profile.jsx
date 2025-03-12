@@ -2,6 +2,8 @@ import React, {useState} from "react";
 import axios from 'axios';
 import {API_URL} from '../config/config.js';
 
+import LoadingAndError from './LoadingAndError';
+
 const Profile = () => {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(false);

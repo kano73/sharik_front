@@ -14,10 +14,12 @@ const Auth = () => {
         setError('');
         try {
             const response = await axios.post(`${API_URL}/login`, { email, password });
+            console.log("response: "+response);
             localStorage.setItem('token', response.data.token);
             alert('Login successful');
         } catch (err) {
             setError(err.response?.data?.message || 'Login failed');
+            console.log("error: ");
             console.log(err);
         } finally {
             setLoading(false);
@@ -41,8 +43,12 @@ const Auth = () => {
     return (
         <div>
             <LoadingAndError error={error} setError={setError} loading={loading} setLoading={setLoading} />
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" disabled={loading} />
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" disabled={loading} />
+            <input type="email" value={email}
+                   onChange={e => setEmail(e.target.value)}
+                   placeholder="Email" disabled={loading} />
+            <input type="password" value={password}
+                   onChange={e => setPassword(e.target.value)}
+                   placeholder="Password" disabled={loading} />
             <button onClick={login} disabled={loading}>Login</button>
             <button onClick={logout} disabled={loading}>Logout</button>
         </div>
