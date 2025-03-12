@@ -1,24 +1,15 @@
-import React, {useEffect, useState} from "react";
-import axios from 'axios';
-import { API_URL } from '../config/config.js';
+import React, {useState} from "react";
+import Filter from './Filter';
 
-
-axios.defaults.adapter = require('axios/lib/adapters/xhr');
-// Product Component
 const Product = () => {
     const [products, setProducts] = useState([]);
-
-    const fetchProducts = async () => {
-        const response = await axios.post(`${API_URL}/products`, {});
-        setProducts(response.data);
+    const updateProducts = (newProducts) => {
+        setProducts(newProducts);
     };
-
-    useEffect(() => {
-        fetchProducts();
-    }, []);
 
     return (
         <div>
+            <Filter updateProducts={updateProducts}/>
             <ul>
                 {products.map(product => (
                     <li key={product.id}>{product.name} - ${product.price}</li>
@@ -28,4 +19,4 @@ const Product = () => {
     );
 };
 
-export { Product } ;
+export default Product;

@@ -1,32 +1,40 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import axios from 'axios';
-import { API_URL } from '../config/config.js';
+import {API_URL} from '../config/config.js';
 
-axios.defaults.adapter = require('axios/lib/adapters/xhr');
-
-// Profile Component
 const Profile = () => {
     const [profile, setProfile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
     const fetchProfile = async () => {
-        const response = await axios.get(`${API_URL}/profile`);
-        setProfile(response.data);
+        setError('');
+        try {
+            const response = await axios.get(`${API_URL}/profile`);
+            setProfile(response.data);
+            alert('Login successful');
+        } catch (err) {
+            setError(err.response?.data?.message || 'Login failed');
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
-    useEffect(() => {
-        fetchProfile();
-    }, []);
+    fetchProfile();
 
     return (
         <div>
-            {profile && (
-                <div>
-                    <p>Name: {profile.name}</p>
-                    <p>Email: {profile.email}</p>
-                </div>
-            )}
+
+            <LoadingAndError error={error} setError={setError} loading={loading} setLoading={setLoading} />
+            <div>
+                <p>Email: {profile.email}</p>
+                <p>First name: {profile.firstName}</p>
+                <p>Last name: {profile.lastName}</p>
+                <p>Address: {profile.Address}</p>
+            </div>
         </div>
     );
 };
 
-export { Profile } ;
+export default Profile ;
