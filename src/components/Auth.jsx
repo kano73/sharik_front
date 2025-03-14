@@ -13,12 +13,14 @@ const Auth = () => {
     const login = async () => {
         setError('');
         try {
-            const response = await axios.post(`${API_URL}/login`, { email, password });
+            const response = await axios.post(`${API_URL}/login`,
+                { email, password },
+                { withCredentials: true }
+            );
             console.log("response: "+response);
-            localStorage.setItem('token', response.data.token);
             alert('Login successful');
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
+            setError(err.response.data);
             console.log("error: ");
             console.log(err);
         } finally {
@@ -27,16 +29,11 @@ const Auth = () => {
     };
 
     const logout = async () => {
-        setLoading(true);
-        setError('');
         try {
-            await axios.post(`${API_URL}/logout`);
-            localStorage.removeItem('token');
+            await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
             alert('Logout successful');
         } catch (err) {
-            setError(err.response?.data?.message || 'Logout failed');
-        } finally {
-            setLoading(false);
+             setError(err.response);
         }
     };
 

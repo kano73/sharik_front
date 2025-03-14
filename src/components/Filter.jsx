@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {API_URL} from '../config/config.js';
 import LoadingAndError from './LoadingAndError';
@@ -16,19 +16,34 @@ const Filter = ({updateProducts}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({
+            ...prev,
+            [name]: name === 'categories' ? value.split(',').map(c => c.trim()) : value
+        }));
+    };
+
     async function sendRequest() {
         setLoading(true);
         setError('');
         try {
-            const response = await axios.post(`${API_URL}/products`, filters);
+            console.log(filters);
+            const response = await axios.post(`${API_URL}/products`, {...filters}, {withCredentials: true});
+            console.log(response);
             updateProducts(response.data);
         } catch (err) {
-            setError(err.response?.data?.message || 'Error while loading products');
+            setError(err.response.data);
+            console.log("eroor");
             console.log(err);
         } finally {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        sendRequest();
+    }, []);
     
     return (
         <div>
@@ -37,39 +52,39 @@ const Filter = ({updateProducts}) => {
                 type="text"
                 name="nameAndDescription"
                 value={filters.nameAndDescription}
-                onChange={handleFilterChange}
                 placeholder="Search by name or description"
+                onChange={handleChange}
             />
             <input
                 type="number"
                 name="priceFrom"
                 value={filters.priceFrom}
-                onChange={handleFilterChange}
                 placeholder="Price From"
+                onChange={handleChange}
             />
             <input
                 type="number"
                 name="priceTo"
                 value={filters.priceTo || ''}
-                onChange={handleFilterChange}
                 placeholder="Price To"
+                onChange={handleChange}
             />
             <input
                 type="text"
                 name="categories"
                 value={filters.categories.join(', ')}
-                onChange={(e) => handleFilterChange({ target: { name: 'categories', value: e.target.value.split(', ') } })}
                 placeholder="Categories (comma separated)"
+                onChange={handleChange}
             />
-            <select name="sortBy" value={filters.sortBy} onChange={handleSortChange}>
+            <select name="sortBy" value={filters.sortBy} onChange={handleChange}>
                 <option value="NAME">Sort by Name</option>
                 <option value="PRICE">Sort by Price</option>
             </select>
-            <select name="sortDirection" value={filters.sortDirection} onChange={handleSortChange}>
+            <select name="sortDirection" value={filters.sortDirection} onChange={handleChange}>
                 <option value="ASC">Ascending</option>
                 <option value="DESC">Descending</option>
             </select>
-            <input type="submit" onSubmit={sendRequest()}/>
+            <input type="submit" onClick={sendRequest}/>
         </div>
     );
 };

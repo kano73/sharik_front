@@ -11,7 +11,7 @@ function App() {
             <div className="App">
                 <h1>Online Store</h1>
                 <nav>
-                    <Link to="/">Home</Link> |
+                    <Link to="/">Login</Link> |
                     <Link to="/profile">Profile</Link> |
                     <Link to="/products">Products</Link> |
                     <Link to="/cart">Cart</Link>
