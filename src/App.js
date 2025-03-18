@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Auth from './components/Auth';
 import Cart from './components/Cart';
+import Products from './components/Products';
 import Product from './components/Product';
 import Profile from './components/Profile';
 import Order from './components/Order';
@@ -37,11 +38,12 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Auth />} />
                     <Route path="/profile" element={<Profile />} />
-                    <Route path="/products" element={<Product />} />
+                    <Route path="/products" element={<Products />} />
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/cart/make_order" element={<Order/>} />
-                    <Route path="/admin/panel" element={<AdminPanel/>}/>
+                    <Route path="/product" element={<Product />} />
 
+                    <Route path="/admin/panel" element={<AdminPanel/>}/>
                     <Route path="/admin/users" element={<Users />} />
                     <Route path="/admin/histories" element={<Histories />} />
                 </Routes>

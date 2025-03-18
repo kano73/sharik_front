@@ -4,6 +4,7 @@ import {API_URL} from '../../config/config';
 import LoadingAndError from '../LoadingAndError';
 import OrderHistory from '../displayData/OrderHistory';
 import { useNavigate } from 'react-router-dom';
+import PageCounter from '../counters/PageCounter';
 
 const Histories = () => {
     const [page, setPage] = useState(1);
@@ -16,6 +17,7 @@ const Histories = () => {
         setLoading(true);
         setError('');
         try {
+            console.log(page)
             const response = await axios.get(`${API_URL}/admin/all_histories`,
                 {
                     params: { page },
@@ -32,12 +34,12 @@ const Histories = () => {
 
     useEffect(() => {
         fetchHistories();
-    }, []);
-
+    }, [page]);
 
     return (
         <div>
             <LoadingAndError error={error} setError={setError} loading={loading} setLoading={setLoading} />
+            <PageCounter onCountChange={(count)=>setPage(count)} />
             <OrderHistory data={histories} />
         </div>
     );

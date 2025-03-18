@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {API_URL} from '../config/config.js';
-
 import LoadingAndError from './LoadingAndError';
+import CryptoJS from 'crypto-js';
+
 
 const Auth = () => {
     const [email, setEmail] = useState('');
@@ -14,12 +15,13 @@ const Auth = () => {
         setError('');
         try {
             const response = await axios.post(`${API_URL}/login`,
-                { email, password },
+                { email,  password},
                 { withCredentials: true }
             );
             console.log("response: "+response);
             alert('Login successful');
         } catch (err) {
+            console.log(err);
             const errorMessage = err.response?.data || "Something went wrong";
             setError(errorMessage);
         } finally {
