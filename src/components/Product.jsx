@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useState} from "react";
 import Filter from './Filter';
 import axios from 'axios';
-import Counter from './Counter';
+import Amount from './counters/Amount';
 import {API_URL} from '../config/config.js';
+
 
 const Product = () => {
     const [products, setProducts] = useState([]);
@@ -10,9 +11,14 @@ const Product = () => {
         setProducts(newProducts);
     };
     const [productCounts, setProductCounts] = useState({});
-    const handleCountChange = (productId, count) => {
-        setProductCounts(prev => ({ ...prev, [productId]: count }));
-    };
+    const handleCountChange = useCallback((productId, count) => {
+        setProductCounts(prev => ({
+            ...prev,
+            [productId]: count,
+        }));
+    }, []);
+
+
 
     async function addToCart(productId) {
         try {
@@ -29,8 +35,7 @@ const Product = () => {
             console.log(response);
             alert(response.data);
         } catch (err) {
-            console.log("eroor");
-            console.log(err);
+            alert("unable to add to cart");
         }
     }
 
@@ -47,7 +52,9 @@ const Product = () => {
                         <span>Description: {product.description}</span><br/>
                         <span>Categories: {product.categories.join(', ')}</span><br/>
                         <span>Available: {product.available ? 'Yes' : 'No'}</span><br/>
-                        <Counter productId={product.id} onCountChange={handleCountChange}/>
+                        <Amount
+                            productId={product.id}
+                            onCountChange={handleCountChange}/>
                         <button onClick={() => addToCart(product.id)}>Add to cart</button>
                     </div>
                 ))}

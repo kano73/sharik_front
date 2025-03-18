@@ -2,16 +2,27 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {API_URL} from '../config/config.js';
 import LoadingAndError from './LoadingAndError';
+import PageCounter from './counters/PageCounter';
 
 const Filter = ({updateProducts}) => {
+
+    const [page,setPage] = useState(1);
+    const handleCountChange = (count) => {
+        setPage(count);
+        setFilters(prevFilters => ({
+            ...prevFilters,
+            page: count,
+        }));
+    };
+    
     const [filters,  setFilters] = useState({
         nameAndDescription: '',
         priceFrom: '',
         priceTo: '',
         categories: [],
-        page: 1,
         sortBy: 'NAME',
-        sortDirection: 'ASC'
+        sortDirection: 'ASC',
+        page: page
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -33,9 +44,9 @@ const Filter = ({updateProducts}) => {
             console.log(response);
             updateProducts(response.data);
         } catch (err) {
-            setError(err.response.data);
-            console.log("eroor");
+            const errorMessage = err.response?.data || "Something went wrong";
             console.log(err);
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -43,7 +54,7 @@ const Filter = ({updateProducts}) => {
 
     useEffect(() => {
         sendRequest();
-    }, []);
+    }, [page]);
     
     return (
         <div>
@@ -85,6 +96,9 @@ const Filter = ({updateProducts}) => {
                 <option value="DESC">Descending</option>
             </select>
             <input type="submit" onClick={sendRequest}/>
+            <PageCounter
+                onCountChange={handleCountChange}
+            />
         </div>
     );
 };

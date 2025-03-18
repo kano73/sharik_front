@@ -15,14 +15,10 @@ const Profile = () => {
         setError('');
         try {
             const response = await axios.get(`${API_URL}/profile`,{withCredentials: true});
-
-            console.log(response);
-            console.log(response.data);
             setProfile(response.data);
         } catch (err) {
-            setError(err.response.data);
-            
-            console.log(err);
+            const errorMessage = err.response?.data || "Something went wrong";
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }

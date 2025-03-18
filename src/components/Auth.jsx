@@ -20,9 +20,8 @@ const Auth = () => {
             console.log("response: "+response);
             alert('Login successful');
         } catch (err) {
-            setError(err.response.data);
-            console.log("error: ");
-            console.log(err);
+            const errorMessage = err.response?.data || "Something went wrong";
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
