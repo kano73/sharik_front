@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Counter from './Counter';
 
-const Quantity = ({productId, onCountChange, startPoint}) => {
+const Quantity = ({productId, onCountChange, startPoint,maxAmount}) => {
     const [count, setCount] = useState(startPoint);
 
     useEffect(() => {
@@ -9,9 +9,9 @@ const Quantity = ({productId, onCountChange, startPoint}) => {
     }, [count, productId, onCountChange]);
 
     const handleIncrement = () => {
-        setCount(prevCount => prevCount + 1);
+        setCount(prevCount => (prevCount < maxAmount ? prevCount + 1 : prevCount));
     };
-
+0
     const handleDecrement = () => {
         setCount(prevCount => (prevCount > 1 ? prevCount - 1 : prevCount));
     };

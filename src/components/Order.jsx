@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {API_URL} from '../config/config.js';
+import {API_URL , DIGITS_AFTER_COMA} from '../config/config.js';
 import LoadingAndError from './LoadingAndError';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ const Order = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [address, setAddress] = useState('');
+    const [summaryPrice, setSummaryPrice] = useState(null);
     const navigate = useNavigate();
 
     const fetchCart = async () => {
@@ -17,6 +18,10 @@ const Order = () => {
         try {
             const response = await axios.get(`${API_URL}/cart`, {withCredentials: true});
             setCart(response.data);
+            console.log(response.data);
+            setSummaryPrice(
+                response.data.reduce((acc, cur) => acc + cur.product.price * cur.quantity, 0) / (10 ** DIGITS_AFTER_COMA)
+            );
         } catch (err) {
             const errorMessage = err.response?.data || "Something went wrong";
             setError(errorMessage);
@@ -50,6 +55,7 @@ const Order = () => {
                 {customAddress: address},
                 {withCredentials: true});
             setCart([])
+            setSummaryPrice(0);
             alert(response.data);
         } catch (err) {
             alert("unable to make order");
@@ -61,34 +67,60 @@ const Order = () => {
     }
 
     return (
-        <div>
-            <LoadingAndError error={error} setError={setError} loading={loading} setLoading={setLoading}/>
-            <div className={'products'}>
+        <div className="container mt-4">
+            <LoadingAndError error={error} setError={setError} loading={loading} setLoading={setLoading} />
+
+            <div className="products">
                 {cart.length === 0 ? (
-                    <div>
-                        <p>Cart is empty</p>
+                    <div className="alert alert-warning" role="alert">
+                        Cart is empty
                     </div>
-                ) : cart.map(paq => (
-                    <div key={paq.product.id} className={'product'}>
-                        <h2>{paq.product.name}</h2>
-                        <span>Price: ${paq.product.price}</span><br/>
-                        <span>Amount Left: {paq.product.amountLeft}</span><br/>
-                        <span>Description: {paq.product.description}</span><br/>
-                        <span>Categories: {paq.product.categories.join(', ')}</span><br/>
-                        <span>Available: {paq.product.available ? 'Yes' : 'No'}</span><br/>
-                        {paq.product.imageUrl &&
-                            <img src={paq.product.imageUrl} alt={paq.product.name} style={{width: '100px'}}/>}
-                        <br/><span>quantity: {paq.quantity}</span><br/>
-                        <span>Your address: </span>
-                        <input type="text" value={address} onChange={handleAddressChange} placeholder={"address"}/>
-                        <br/>
-                        <button onClick={sendRequestOrder} disabled={loading || cart.length === 0}>Make order</button>
-                    </div>
-                ))}
+                ) : (
+                    cart.map(paq => (
+                        <div key={paq.product.id} className="product mb-4 p-4 border rounded-lg shadow-sm">
+                            <h2 className="h4">{paq.product.name}</h2>
+                            <p><strong>Price:</strong> ${paq.product.price / (10 ** DIGITS_AFTER_COMA)}</p>
+                            <p><strong>Amount Left:</strong> {paq.product.amountLeft}</p>
+                            <p><strong>Description:</strong> {paq.product.description}</p>
+                            <p><strong>Categories:</strong> {paq.product.categories.join(', ')}</p>
+                            <p><strong>Available:</strong> {paq.product.available ? 'Yes' : 'No'}</p>
+                            {paq.product.imageUrl && (
+                                <img src={paq.product.imageUrl} alt={paq.product.name} style={{ width: '100px' }} className="img-fluid mb-2" />
+                            )}
+                            <p><strong>Quantity:</strong> {paq.quantity}</p>
+                            <p><strong>Your Address:</strong></p>
+                        </div>
+                    ))
+                )}
+
+                <div className="mb-4">
+                    <input
+                        type="text"
+                        value={address}
+                        onChange={handleAddressChange}
+                        placeholder="Enter your address"
+                        className="form-control"
+                    />
+                </div>
+
+                <p><strong>Summary Price:</strong> ${summaryPrice}</p>
+
+                <button
+                    onClick={sendRequestOrder}
+                    disabled={loading || cart.length === 0}
+                    className="btn btn-primary"
+                >
+                    Make Order
+                </button>
             </div>
 
-            <button onClick={() => navigate("/cart")} disabled={loading}>Go back</button>
-
+            <button
+                onClick={() => navigate("/cart")}
+                disabled={loading}
+                className="btn btn-secondary mt-3"
+            >
+                Go Back
+            </button>
         </div>
     );
 };

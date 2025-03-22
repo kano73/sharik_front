@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import {API_URL} from '../config/config.js';
 import LoadingAndError from './LoadingAndError';
-import CryptoJS from 'crypto-js';
+import {Link } from "react-router-dom";
 
 
 const Auth = () => {
@@ -39,16 +39,51 @@ const Auth = () => {
     };
 
     return (
-        <div>
-            <LoadingAndError error={error} setError={setError} loading={loading} setLoading={setLoading} />
-            <input type="email" value={email}
-                   onChange={e => setEmail(e.target.value)}
-                   placeholder="Email" disabled={loading} />
-            <input type="password" value={password}
-                   onChange={e => setPassword(e.target.value)}
-                   placeholder="Password" disabled={loading} />
-            <button onClick={login} disabled={loading}>Login</button>
-            <button onClick={logout} disabled={loading}>Logout</button>
+        <div className="container mt-5">
+            <h2 className="text-center mb-4">Login</h2>
+
+            {error && <div className="alert alert-danger">{error}</div>}
+
+            <p className="text-center">Do not have an account? <Link to="/register" className="text-primary">Register now</Link></p>
+
+            <div className="mb-3">
+                <input
+                    type="email"
+                    className="form-control"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="Email"
+                    disabled={loading}
+                />
+            </div>
+
+            <div className="mb-3">
+                <input
+                    type="password"
+                    className="form-control"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="Password"
+                    disabled={loading}
+                />
+            </div>
+
+            <div className="d-flex justify-content-between">
+                <button
+                    onClick={login}
+                    className="btn btn-primary"
+                    disabled={loading}
+                >
+                    Login
+                </button>
+                <button
+                    onClick={logout}
+                    className="btn btn-secondary"
+                    disabled={loading}
+                >
+                    Logout
+                </button>
+            </div>
         </div>
     );
 };

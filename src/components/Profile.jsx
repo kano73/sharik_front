@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
 import {API_URL} from '../config/config.js';
-
+import OrderHistory from "./displayData/OrderHistory"
 import LoadingAndError from './LoadingAndError';
 
 const Profile = () => {
@@ -10,6 +10,7 @@ const Profile = () => {
     const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState(false);
     const [error, setError] = useState('');
+    const [history, setHistory] = useState([]);
 
     const fetchProfile = async () => {
         setError('');
@@ -23,6 +24,19 @@ const Profile = () => {
             setLoading(false);
         }
     };
+
+    const fetchHistory = async () => {
+        setError('');
+        try {
+            const response = await axios.get(`${API_URL}/history`,{withCredentials: true});
+            setHistory([response.data]);
+        } catch (err) {
+            const errorMessage = err.response?.data || "Something went wrong";
+            setError(errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     const startEditing = () => {
         setEditing(true);
@@ -41,7 +55,12 @@ const Profile = () => {
     };
 
     useEffect(() => {
+        console.log("hi");
         fetchProfile();
+
+
+
+        fetchHistory();
     }, []);
 
     const cancelChanges = () => {
@@ -59,35 +78,73 @@ const Profile = () => {
     };
 
     return (
-        <div>
-            <LoadingAndError error={error} setError={setError} loading={loading} setLoading={setLoading} />
+        <div className="container mt-4">
+            <h2 className="text-xl font-bold mb-4">Profile</h2>
+            <LoadingAndError error={error} setError={setError} loading={loading} setLoading={setLoading}/>
             {loading ? (
                 <p>Loading...</p>
-            ) :( editing ?
-                    (
-                        <div>
-                            <input type="text" name="email" value={profile.email} placeholder="email"
-                                   onChange={handleChange}/><br/>
-                            <input type="text" name="firstName" value={profile.firstName} placeholder="firstName"
-                                   onChange={handleChange}/><br/>
-                            <input type="text" name="lastName" value={profile.lastName} placeholder="lastName"
-                                   onChange={handleChange}/><br/>
-                            <input type="text" name="address" value={profile.address} placeholder="Address"
-                                   onChange={handleChange}/><br/>
-                            <button onClick={saveChanges}>Save</button>
-                            <button onClick={cancelChanges}>Cancel</button>
+            ) : (
+                editing ? (
+                    <div>
+                        <div className="mb-3">
+                            <input
+                                type="text"
+                                name="email"
+                                value={profile.email}
+                                placeholder="Email"
+                                onChange={handleChange}
+                                className="form-control"
+                            />
                         </div>
-                    )
-                    :
-                    (
-                        <div>
-                            <p>Email: {profile.email}</p>
-                            <p>First name: {profile.firstName}</p>
-                            <p>Last name: {profile.lastName}</p>
-                            <p>Address: {profile.address}</p>
-                            <button onClick={startEditing}>Edit</button>
+                        <div className="mb-3">
+                            <input
+                                type="text"
+                                name="firstName"
+                                value={profile.firstName}
+                                placeholder="First Name"
+                                onChange={handleChange}
+                                className="form-control"
+                            />
                         </div>
-                    )
+                        <div className="mb-3">
+                            <input
+                                type="text"
+                                name="lastName"
+                                value={profile.lastName}
+                                placeholder="Last Name"
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                        </div>
+                        <div className="mb-3">
+                            <input
+                                type="text"
+                                name="address"
+                                value={profile.address}
+                                placeholder="Address"
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                        </div>
+                        <button onClick={saveChanges} className="btn btn-primary me-2">Save</button>
+                        <button onClick={cancelChanges} className="btn btn-secondary">Cancel</button>
+                    </div>
+                ) : (
+                    <div>
+                        <p><strong>Email:</strong> {profile.email}</p>
+                        <p><strong>First Name:</strong> {profile.firstName}</p>
+                        <p><strong>Last Name:</strong> {profile.lastName}</p>
+                        <p><strong>Address:</strong> {profile.address}</p>
+                        <button onClick={startEditing} className="btn btn-warning">Edit</button>
+                    </div>
+                )
+            )}
+            {loading ? (
+                <p>Loading...</p>
+            ) : (
+                <div>
+                    <OrderHistory data={history}/>
+                </div>
             )}
         </div>
     );

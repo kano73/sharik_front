@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-
-import {API_URL} from '../config/config.js';
+import Amount from './counters/Amount';
+import {API_URL, DIGITS_AFTER_COMA} from '../config/config.js';
 
 const Product = () => {
     const [product, setProduct] = useState(null);
@@ -24,6 +24,7 @@ const Product = () => {
         if (productId) {
             axios.get(`${API_URL}/product?id=${productId}`)
                 .then(response => {
+                    response.data.price=response.data.price/ (10 ** DIGITS_AFTER_COMA)
                     setProduct(response.data);
                     setLoading(false);
                 })
@@ -56,22 +57,67 @@ const Product = () => {
             });
     };
 
+    const [productCount, setProductCount] = useState(1);
+    const handleCountChange = useCallback((productId, count) => {
+        setProductCount(count);
+    }, []);
+
+
+    async function addToCart(productId) {
+        try {
+            const request = {
+                productId : productId,
+                quantity : productCount
+            };
+            console.log(request);
+
+            const response = await axios.post(`${API_URL}/add`,
+                {...request},
+                {withCredentials: true});
+            console.log(response);
+            alert(response.data);
+        } catch (err) {
+            alert("unable to add to cart");
+        }
+    }
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 
     return (
-        <div>
+        <div className="container mt-4">
             {product && (
-                <div>
-                    <h2>{product.name}</h2>
-                    <img src={product.imageUrl} alt={product.name} />
-                    <p>{product.description}</p>
-                    <p>Price: ${product.price}</p>
-                    <p>Amount Left: {product.amountLeft}</p>
-                    <p>{product.available ? 'Available' : 'Out of stock'}</p>
+                <div className="product-detail p-4 border rounded-lg shadow-sm">
+                    <h2 className="h3 mb-3">{product.name}</h2>
+                    <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="img-fluid mb-3"
+                        style={{ maxWidth: '300px' }}
+                    />
+                    <p><strong>Description:</strong> {product.description}</p>
+                    <p><strong>Price:</strong> ${product.price}</p>
+                    <p><strong>Amount Left:</strong> {product.amountLeft}</p>
+                    <p><strong>Status:</strong> {product.available ? 'Available' : 'Out of stock'}</p>
+
+                    <Amount
+                        productId={product.id}
+                        onCountChange={handleCountChange}
+                        maxAmount={product.amountLeft}
+                    />
+                    <button
+                        onClick={() => addToCart(product.id)}
+                        disabled={!product.available || product.amountLeft === 0}
+                        className="btn btn-primary mt-3"
+                    >
+                        Add to Cart
+                    </button><br/>
 
                     {isAdmin && (
-                        <button onClick={toggleAvailability}>
+                        <button
+                            onClick={toggleAvailability}
+                            className={`btn mt-3 ${product.available ? 'btn-warning' : 'btn-success'}`}
+                        >
                             {product.available ? 'Set as Out of Stock' : 'Set as Available'}
                         </button>
                     )}
