@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {API_URL} from '../config/config.js';
-import LoadingAndError from './LoadingAndError';
 import {Link } from "react-router-dom";
 
 

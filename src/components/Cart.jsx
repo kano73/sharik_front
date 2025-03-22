@@ -30,7 +30,7 @@ const Cart = () => {
     }, []);
 
     const emptyCart = async () => {
-        await axios.delete(`${API_URL}/empty_cart`);
+        await axios.delete(`${API_URL}/empty_cart`, {withCredentials: true});
         setCart([]);
     };
 

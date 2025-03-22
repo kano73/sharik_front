@@ -16,13 +16,17 @@ const Product = () => {
 
 
     const fetchIsAdmin = async () => {
-        const response = await axios.get(`${API_URL}/is_user_admin`);
-        setIsAdmin(response.data);
+        try {
+            const response = await axios.get(`${API_URL}/is_user_admin` , {withCredentials: true});
+            setIsAdmin(response.data);
+        }catch(error) {
+            setIsAdmin(false);
+        }
     };
 
     useEffect(() => {
         if (productId) {
-            axios.get(`${API_URL}/product?id=${productId}`)
+            axios.get(`${API_URL}/product?id=${productId}` , {withCredentials: true})
                 .then(response => {
                     response.data.price=response.data.price/ (10 ** DIGITS_AFTER_COMA)
                     setProduct(response.data);

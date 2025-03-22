@@ -18,8 +18,13 @@ function App() {
 
     const [isAdmin, setIsAdmin] = useState(false);
     const fetchIsAdmin = async () => {
-        const response = await axios.get(`${API_URL}/is_user_admin`);
-        setIsAdmin(response.data);
+        try {
+            const response = await axios.get(`${API_URL}/is_user_admin` , {withCredentials: true});
+            setIsAdmin(response.data);
+        }catch(error) {
+            setIsAdmin(false);
+        }
+
     };
 
     useEffect(() => {

@@ -3,7 +3,6 @@ import axios from 'axios';
 import {API_URL} from '../../config/config';
 import LoadingAndError from '../LoadingAndError';
 import OrderHistory from '../displayData/OrderHistory';
-import { useNavigate } from 'react-router-dom';
 import PageCounter from '../counters/PageCounter';
 
 const Histories = () => {
@@ -11,7 +10,6 @@ const Histories = () => {
     const [histories, setHistories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const navigate = useNavigate();
 
     const fetchHistories = async () => {
         setLoading(true);

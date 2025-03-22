@@ -11,7 +11,7 @@ const Quantity = ({productId, onCountChange, startPoint,maxAmount}) => {
     const handleIncrement = () => {
         setCount(prevCount => (prevCount < maxAmount ? prevCount + 1 : prevCount));
     };
-0
+
     const handleDecrement = () => {
         setCount(prevCount => (prevCount > 1 ? prevCount - 1 : prevCount));
     };
