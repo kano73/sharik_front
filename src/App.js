@@ -11,7 +11,7 @@ import axios from 'axios';
 import {API_URL} from './config/config.js';
 import Users from './components/admin/Users';
 import Histories from './components/admin/Histories';
-import User from './components/User';
+import User from './components/admin/User';
 import Register from './components/Register';
 
 function App() {
