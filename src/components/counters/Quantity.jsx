@@ -5,7 +5,7 @@ const Quantity = ({productId, onCountChange, startPoint,maxAmount}) => {
     const [count, setCount] = useState(startPoint);
 
     useEffect(() => {
-        onCountChange(productId, count);
+        onCountChange(productId, count, maxAmount);
     }, [count, productId, onCountChange]);
 
     const handleIncrement = () => {

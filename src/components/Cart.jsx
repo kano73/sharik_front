@@ -36,7 +36,7 @@ const Cart = () => {
 
     const removeFromCart = async (productId) => {
         try {
-            await sendRequest(productId, 0);
+            await sendRequest(productId, 0, 0);
             setCart(prevCart => prevCart.filter(paq => paq.product.id !== productId));
         } catch (err) {
             alert("Unable to remove item from cart");
@@ -44,7 +44,7 @@ const Cart = () => {
     };
 
     const isNotFirstRender = useRef(true);
-    const handleCountChange = useCallback((productId, count) => {
+    const handleCountChange = useCallback((productId, count, amountLeft) => {
         if(isNotFirstRender.current) {
             isNotFirstRender.current = false;
             return;
@@ -56,15 +56,16 @@ const Cart = () => {
         }
 
         window.countChangeTimeout = setTimeout(() => {
-            sendRequest(productId, count);
+            sendRequest(productId, count, amountLeft);
         }, 500);
     }, []);
 
-    const sendRequest = async (productId, quantity) => {
+    const sendRequest = async (productId, quantity, amountLeft) => {
         try {
             const request = {
                 productId : productId,
-                quantity : quantity
+                quantity : quantity,
+                productAmountLeft : amountLeft
             };
 
             await axios.post(`${API_URL}/change_amount`,

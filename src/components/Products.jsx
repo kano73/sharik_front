@@ -21,12 +21,13 @@ const Products = () => {
     }, []);
 
 
-    async function addToCart(productId) {
+    async function addToCart(productId, amountLeft) {
         try {
             const quantity = productCounts[productId] || 1;
             const request = {
                 productId : productId,
-                quantity : quantity
+                quantity : quantity,
+                productAmountLeft : amountLeft
             };
             console.log(request);
 
@@ -61,7 +62,7 @@ const Products = () => {
                                 maxAmount={product.amountLeft}
                             />
                             <button
-                                onClick={() => addToCart(product.id)}
+                                onClick={() => addToCart(product.id, product.amountLeft)}
                                 disabled={!product.available || product.amountLeft === 0}
                                 className="btn btn-primary w-100 mt-2"
                             >
