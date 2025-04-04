@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {API_URL , DIGITS_AFTER_COMA} from '../config/config.js';
+import {API_URL} from '../config/config.js';
+
 import LoadingAndError from './LoadingAndError';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,7 +21,7 @@ const Order = () => {
             setCart(response.data);
             console.log(response.data);
             setSummaryPrice(
-                response.data.reduce((acc, cur) => acc + cur.product.price * cur.quantity, 0) / (10 ** DIGITS_AFTER_COMA)
+                response.data.reduce((acc, cur) => acc + cur.product.price * cur.quantity, 0)
             );
         } catch (err) {
             const errorMessage = err.response?.data || "Something went wrong";
@@ -58,7 +59,9 @@ const Order = () => {
             setSummaryPrice(0);
             alert(response.data);
         } catch (err) {
-            alert("unable to make order");
+            const errorMessage = err.response?.data || "Something went wrong";
+            setError(errorMessage);
+            console.log(err);
         }
     }
 
@@ -79,7 +82,7 @@ const Order = () => {
                     cart.map(paq => (
                         <div key={paq.product.id} className="product mb-4 p-4 border rounded-lg shadow-sm">
                             <h2 className="h4">{paq.product.name}</h2>
-                            <p><strong>Price:</strong> ${paq.product.price / (10 ** DIGITS_AFTER_COMA)}</p>
+                            <p><strong>Price:</strong> ${paq.product.price}</p>
                             <p><strong>Amount Left:</strong> {paq.product.amountLeft}</p>
                             <p><strong>Description:</strong> {paq.product.description}</p>
                             <p><strong>Categories:</strong> {paq.product.categories.join(', ')}</p>

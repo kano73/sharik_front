@@ -17,7 +17,6 @@ const FiltersUser = ({fetchFilteredData}) => {
     };
 
     const handlePageChange = (e, newPage) => {
-        console.log(newPage);
         setFilter(prevFilter => ({
             ...prevFilter,
             page: newPage
@@ -26,7 +25,7 @@ const FiltersUser = ({fetchFilteredData}) => {
 
     useEffect(() => {
         fetchFilteredData(filter);
-    }, [filter]);
+    }, []);
 
     return (
         <div className="container mt-4">

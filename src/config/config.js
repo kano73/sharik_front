@@ -2,4 +2,3 @@
 const link = 'http://localhost:8000'
 
 export const API_URL = link;
-export const DIGITS_AFTER_COMA = 2

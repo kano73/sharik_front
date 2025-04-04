@@ -41,9 +41,6 @@ const Profile = () => {
     const startEditing = () => {
         setEditing(true);
         setSaveProfile({...profile});
-
-        console.log("save")
-        console.log(saveProfile);
     }
 
     const saveChanges = async () => {
@@ -55,10 +52,7 @@ const Profile = () => {
     };
 
     useEffect(() => {
-        console.log("hi");
         fetchProfile();
-
-
 
         fetchHistory();
     }, []);

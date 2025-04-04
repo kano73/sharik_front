@@ -14,6 +14,7 @@ import Histories from './components/admin/Histories';
 import User from './components/admin/User';
 import Register from './components/Register';
 
+
 function App() {
 
     const [isAdmin, setIsAdmin] = useState(false);
@@ -65,6 +66,7 @@ function App() {
                     </Routes>
                 </div>
             </div>
+
         </BrowserRouter>
     );
 }

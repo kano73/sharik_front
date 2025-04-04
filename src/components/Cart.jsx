@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState, useRef } from "react";
 import axios from 'axios';
-import {API_URL , DIGITS_AFTER_COMA} from '../config/config.js';
+import {API_URL} from '../config/config.js';
 import LoadingAndError from './LoadingAndError';
 import Quantity from './counters/Quantity';
 import { useNavigate } from 'react-router-dom';
@@ -30,8 +30,14 @@ const Cart = () => {
     }, []);
 
     const emptyCart = async () => {
-        await axios.delete(`${API_URL}/empty_cart`, {withCredentials: true});
-        setCart([]);
+        try{
+            await axios.delete(`${API_URL}/empty_cart`, {withCredentials: true});
+            setCart([]);
+        }catch(err){
+            const errorMessage = err.response?.data || "Something went wrong";
+            setError(errorMessage);
+            console.log(err);
+        }
     };
 
     const removeFromCart = async (productId) => {
@@ -39,7 +45,8 @@ const Cart = () => {
             await sendRequest(productId, 0, 0);
             setCart(prevCart => prevCart.filter(paq => paq.product.id !== productId));
         } catch (err) {
-            alert("Unable to remove item from cart");
+            const errorMessage = err.response?.data || "Something went wrong";
+            alert(errorMessage);
         }
     };
 
@@ -49,7 +56,6 @@ const Cart = () => {
             isNotFirstRender.current = false;
             return;
         }
-        console.log("count",count);
 
         if (window.countChangeTimeout) {
             clearTimeout(window.countChangeTimeout);
@@ -72,7 +78,8 @@ const Cart = () => {
                 {...request},
                 {withCredentials: true});
         } catch (err) {
-            alert("unable to add to cart");
+            const errorMessage = err.response?.data || "Something went wrong";
+            alert(errorMessage);
         }
     }
 
@@ -92,7 +99,7 @@ const Cart = () => {
                             <div className="card-body">
                                 <h5 className="card-title">{paq.product.name}</h5>
                                 <p className="card-text">
-                                    <strong>Price:</strong> ${paq.product.price / (10 ** DIGITS_AFTER_COMA)}<br />
+                                    <strong>Price:</strong> ${paq.product.price}<br />
                                     <strong>Amount Left:</strong> {paq.product.amountLeft}<br />
                                     <strong>Description:</strong> {paq.product.description}<br />
                                     <strong>Categories:</strong> {paq.product.categories.join(', ')}<br />

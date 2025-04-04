@@ -17,18 +17,15 @@ const Users = () => {
         setLoading(true);
         setError('');
         try {
-            console.log(filters);
             const response = await axios.post(`${API_URL}/admin/all_users`,
                 {...filters},
                 {withCredentials: true});
             setUsers(response.data);
-            console.log(response.data);
         } catch (err) {
             const errorMessage = err.response?.data || "Something went wrong";
             setError(errorMessage);
             console.log(err);
         } finally {
-
             setLoading(false);
         }
     };

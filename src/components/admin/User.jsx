@@ -25,7 +25,8 @@ const User = () => {
                     setLoading(false);
                 })
                 .catch(error => {
-                    setError('Error fetching product');
+                    const errorMessage = error.response?.data || "Something went wrong";
+                    setError(errorMessage);
                     setLoading(false);
                 });
         }
@@ -38,7 +39,6 @@ const User = () => {
             const response = await axios.get(`${API_URL}/admin/history_of?id=${userId}`,
                 {withCredentials: true});
             setOrders([response.data]);
-            console.log(response.data);
         } catch (err) {
             const errorMessage = err.response?.data || "Something went wrong";
             setError(errorMessage);

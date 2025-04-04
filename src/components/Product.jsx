@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import Amount from './counters/Amount';
-import {API_URL, DIGITS_AFTER_COMA} from '../config/config.js';
+import {API_URL} from '../config/config.js';
 
 const Product = () => {
     const [product, setProduct] = useState(null);
@@ -28,7 +28,6 @@ const Product = () => {
         if (productId) {
             axios.get(`${API_URL}/product?id=${productId}` , {withCredentials: true})
                 .then(response => {
-                    response.data.price=response.data.price/ (10 ** DIGITS_AFTER_COMA)
                     setProduct(response.data);
                     setLoading(false);
                 })
@@ -74,15 +73,15 @@ const Product = () => {
                 quantity : productCount,
                 productAmountLeft : amountLeft
             };
-            console.log(request);
 
             const response = await axios.post(`${API_URL}/add`,
                 {...request},
                 {withCredentials: true});
-            console.log(response);
             alert(response.data);
         } catch (err) {
-            alert("unable to add to cart");
+            const errorMessage = err.response?.data || "Something went wrong";
+            setError(errorMessage);
+            console.log(err);
         }
     }
 

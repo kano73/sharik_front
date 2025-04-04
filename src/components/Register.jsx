@@ -24,8 +24,9 @@ const Register = () => {
         try {
             const response = await axios.post(`${API_URL}/register`, {...formData});
             setMessage(response.data);
-        } catch (error) {
-            setMessage("Registration failed. Please try again.");
+        } catch (err) {
+            const errorMessage = err.response?.data || "Something went wrong";
+            setMessage(errorMessage);
         }
     };
 

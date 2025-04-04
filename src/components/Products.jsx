@@ -2,15 +2,13 @@ import React, {useCallback, useState} from "react";
 import Filter from './Filter';
 import axios from 'axios';
 import Amount from './counters/Amount';
-import {API_URL, DIGITS_AFTER_COMA} from '../config/config.js';
+import {API_URL} from '../config/config.js';
 import {Link } from "react-router-dom";
-
 
 const Products = () => {
     const [products, setProducts] = useState([]);
     const updateProducts = (newProducts) => {
         setProducts(newProducts);
-        console.log(newProducts);
     };
     const [productCounts, setProductCounts] = useState({});
     const handleCountChange = useCallback((productId, count) => {
@@ -29,15 +27,15 @@ const Products = () => {
                 quantity : quantity,
                 productAmountLeft : amountLeft
             };
-            console.log(request);
 
             const response = await axios.post(`${API_URL}/add`,
                 {...request},
                 {withCredentials: true});
-            console.log(response);
             alert(response.data);
         } catch (err) {
-            alert("unable to add to cart");
+            const errorMessage = err.response?.data || "Something went wrong";
+            alert(errorMessage);
+            console.log(err);
         }
     }
 
@@ -50,7 +48,7 @@ const Products = () => {
                         <div className="product p-3 border rounded shadow-sm">
                             {product.imageUrl && <img src={product.imageUrl} alt={product.name} className="img-fluid mb-3" />}
                             <Link to={`/product?id=${product.id}`}><h5>{product.name}</h5></Link>
-                            <p><strong>Price:</strong> ${product.price / (10 ** DIGITS_AFTER_COMA)}</p>
+                            <p><strong>Price:</strong> ${product.price}</p>
                             <p><strong>Amount Left:</strong> {product.amountLeft}</p>
                             <p><strong>Description:</strong> {product.description}</p>
                             <p><strong>Categories:</strong> {product.categories.join(', ')}</p>

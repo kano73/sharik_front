@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {API_URL} from '../config/config.js';
-import {Link } from "react-router-dom";
-
+import {Link, useNavigate} from "react-router-dom";
+import {GoogleLogin} from "@react-oauth/google";
 
 const Auth = () => {
     const [email, setEmail] = useState('');
@@ -10,15 +10,16 @@ const Auth = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const navigate = useNavigate();
+
     const login = async () => {
         setError('');
         try {
-            const response = await axios.post(`${API_URL}/login`,
+            await axios.post(`${API_URL}/login`,
                 { email,  password},
                 { withCredentials: true }
             );
-            console.log("response: "+response);
-            alert('Login successful');
+            navigate("/products");
         } catch (err) {
             console.log(err);
             const errorMessage = err.response?.data || "Something went wrong";
@@ -35,6 +36,16 @@ const Auth = () => {
         } catch (err) {
              setError(err.response);
         }
+    };
+
+    const handleGoogleLogin = (response) => {
+        axios.post(`${API_URL}/auth/google`, { token: response.credential })
+            .then(() => alert('Login successful'))
+            .catch(err => setError(err.response));
+    };
+
+    const handleLoginError = () => {
+        setError("Error on login");
     };
 
     return (
@@ -83,6 +94,10 @@ const Auth = () => {
                     Logout
                 </button>
             </div>
+            <GoogleLogin
+                onSuccess={handleGoogleLogin}
+                onError={handleLoginError}
+            />
         </div>
     );
 };

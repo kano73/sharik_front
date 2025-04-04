@@ -12,12 +12,10 @@ const useAdminCheck = () => {
             try {
                 const response = await axios.get(`${API_URL}/is_user_admin`, {withCredentials: true});
                 isAdmin.current = response.data;
-                console.log(isAdmin.current, "is admin");
                 if (!isAdmin.current) {
                     navigate("/login");
                 }
             } catch (error) {
-                console.error("Error checking admin status:", error);
                 navigate("/login");
             }
         };

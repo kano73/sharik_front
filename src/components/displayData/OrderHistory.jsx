@@ -1,6 +1,6 @@
 import React from "react";
 import {Link } from "react-router-dom";
-import { DIGITS_AFTER_COMA } from "../../config/config"
+
 
 const OrderHistory = ({ data }) => {
     return (
@@ -35,12 +35,12 @@ const OrderHistory = ({ data }) => {
                                                     <div key={idx} className="p-2 border rounded mb-2">
                                                         <p><strong>ID:</strong> <Link to={`/product?id=${item.product.id}`}>{item.product.id}</Link></p>
                                                         <p><strong>Name:</strong> {item.product.name}</p>
-                                                        <p><strong>Price:</strong> ${item.product.price / (10 ** DIGITS_AFTER_COMA)}</p>
+                                                        <p><strong>Price:</strong> ${item.product.price}</p>
                                                         <p><strong>Quantity:</strong> {item.quantity}</p>
                                                     </div>
                                                 ))}
                                                 <p className="fw-bold">Total: ${order.items.reduce((acc, cur) =>
-                                                    acc + cur.product.price * cur.quantity, 0) / (10 ** DIGITS_AFTER_COMA)}</p>
+                                                    acc + cur.product.price * cur.quantity, 0)}</p>
                                             </td>
                                             <td>{order.deliveryAddress}</td>
                                         </tr>

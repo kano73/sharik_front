@@ -39,13 +39,10 @@ const Filter = ({updateProducts}) => {
         setLoading(true);
         setError('');
         try {
-            console.log({...filters});
             const response = await axios.post(`${API_URL}/products`, {...filters}, {withCredentials: true});
-            console.log(response);
             updateProducts(response.data);
         } catch (err) {
             const errorMessage = err.response?.data || "Something went wrong";
-            console.log(err);
             setError(errorMessage);
         } finally {
             setLoading(false);
