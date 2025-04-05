@@ -38,8 +38,10 @@ const Auth = () => {
         }
     };
 
-    const handleGoogleLogin = (response) => {
-        axios.post(`${API_URL}/auth/google`, { token: response.credential })
+    const handleGoogleLogin = (token) => {
+        axios.post(`${API_URL}/auth/google`,
+            {token: token},
+            { withCredentials: true })
             .then(() => alert('Login successful'))
             .catch(err => setError(err.response));
     };
@@ -95,7 +97,9 @@ const Auth = () => {
                 </button>
             </div>
             <GoogleLogin
-                onSuccess={handleGoogleLogin}
+                onSuccess={credentialResponse => {
+                    handleGoogleLogin(credentialResponse.credential);
+                }}
                 onError={handleLoginError}
             />
         </div>
