@@ -42,12 +42,16 @@ const Auth = () => {
         axios.post(`${API_URL}/auth/google`,
             {token: token},
             { withCredentials: true })
-            .then(() => alert('Login successful'))
-            .catch(err => setError(err.response));
+            .then(() => navigate("/products"))
+            .catch(err => {
+                console.log(err);
+                const errorMessage = err.response?.data || "Something went wrong";
+                setError(errorMessage);
+            });
     };
 
     const handleLoginError = () => {
-        setError("Error on login");
+        alert("please register");
     };
 
     return (
