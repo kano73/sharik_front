@@ -1,29 +1,25 @@
-import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {API_URL} from '../../config/config';
 
 const useAdminCheck = () => {
-    const isAdmin = useRef(false);
-    const navigate = useNavigate();
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const fetchIsAdmin = async () => {
             try {
-                const response = await axios.get(`${API_URL}/is_user_admin`, {withCredentials: true});
-                isAdmin.current = response.data;
-                if (!isAdmin.current) {
-                    navigate("/login");
-                }
+                const response = await axios.get(`${API_URL}/is_user_admin`,
+                    {withCredentials: true});
+                setIsAdmin(response.data);
             } catch (error) {
-                navigate("/login");
+                setIsAdmin(false);
             }
         };
 
         fetchIsAdmin();
-    }, [navigate]);
+    }, []);
 
-    return isAdmin.current;
+    return isAdmin;
 };
 
 export default useAdminCheck;
