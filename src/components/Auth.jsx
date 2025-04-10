@@ -5,6 +5,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {GoogleLogin} from "@react-oauth/google";
 
 const Auth = () => {
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
