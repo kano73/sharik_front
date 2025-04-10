@@ -15,11 +15,9 @@ const Histories = () => {
         setLoading(true);
         setError('');
         try {
-            console.log(page)
             const response = await axios.get(`${API_URL}/admin/all_histories`,
                 {params: { page }, withCredentials: true});
             setHistories(response.data);
-            console.log(response.data);
         } catch (err) {
             const errorMessage = err.response?.data || "Something went wrong";
             setError(errorMessage);

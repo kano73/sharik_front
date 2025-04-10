@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import React, { useState} from "react";
+import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
 import Auth from './components/Auth';
 import Cart from './components/Cart';
 import Products from './components/Products';
@@ -7,30 +7,17 @@ import Product from './components/Product';
 import Profile from './components/Profile';
 import Order from './components/Order';
 import AdminPanel from './components/AdminPanel';
-import axios from 'axios';
-import {API_URL} from './config/config.js';
 import Users from './components/admin/Users';
 import Histories from './components/admin/Histories';
 import User from './components/admin/User';
 import Register from './components/Register';
-
+import {GoogleOAuthProvider} from "@react-oauth/google";
+import useAdminCheck from "./components/admin/useAdminCheck";
 
 function App() {
+    const CLIENT_ID = "340784962837-katothpseelomf0sqa0eptgal9g33h1r.apps.googleusercontent.com";
 
-    const [isAdmin, setIsAdmin] = useState(false);
-    const fetchIsAdmin = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/is_user_admin` , {withCredentials: true});
-            setIsAdmin(response.data);
-        }catch(error) {
-            setIsAdmin(false);
-        }
-
-    };
-
-    useEffect(() => {
-        fetchIsAdmin();
-    }, []);
+    const isAdmin = useAdminCheck();
 
     return (
         <BrowserRouter>
@@ -51,7 +38,11 @@ function App() {
 
                 <div className="mt-4">
                     <Routes>
-                        <Route path="/" element={<Auth />} />
+                        <Route path="/" element={
+                            <GoogleOAuthProvider clientId={CLIENT_ID}>
+                                <Auth />
+                            </GoogleOAuthProvider>
+                        } />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/products" element={<Products />} />
                         <Route path="/cart" element={<Cart />} />
