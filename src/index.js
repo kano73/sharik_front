@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {GoogleOAuthProvider} from "@react-oauth/google";
 
 axios.defaults.withCredentials = true;
-const CLIENT_ID = "340784962837-katothpseelomf0sqa0eptgal9g33h1r.apps.googleusercontent.com";
+const CLIENT_ID = "340784962837-tv2a1qh23m3f2jk7282qjai54eo0nvvq.apps.googleusercontent.com";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
