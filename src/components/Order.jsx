@@ -19,7 +19,7 @@ const Order = () => {
         try {
             const response = await axios.get(`${API_URL}/cart`, {withCredentials: true});
             setCart(response.data);
-            console.log(response.data);
+
             setSummaryPrice(
                 response.data.reduce((acc, cur) => acc + cur.product.price * cur.quantity, 0)
             );

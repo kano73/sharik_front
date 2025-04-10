@@ -18,6 +18,7 @@ const Profile = () => {
             const response = await axios.get(`${API_URL}/profile`,{withCredentials: true});
             setProfile(response.data);
         } catch (err) {
+            console.log(err)
             const errorMessage = err.response?.data || "Something went wrong";
             setError(errorMessage);
         } finally {
@@ -31,6 +32,7 @@ const Profile = () => {
             const response = await axios.get(`${API_URL}/history`,{withCredentials: true});
             setHistory([response.data]);
         } catch (err) {
+            console.log(err)
             const errorMessage = err.response?.data || "Something went wrong";
             setError(errorMessage);
         } finally {
