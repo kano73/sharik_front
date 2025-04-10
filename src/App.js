@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React from "react";
 import {BrowserRouter, Routes, Route, Link} from "react-router-dom";
 import Auth from './components/Auth';
 import Cart from './components/Cart';
