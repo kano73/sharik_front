@@ -15,7 +15,7 @@ import {GoogleOAuthProvider} from "@react-oauth/google";
 import useAdminCheck from "./components/admin/useAdminCheck";
 
 function App() {
-    const CLIENT_ID = "340784962837-katothpseelomf0sqa0eptgal9g33h1r.apps.googleusercontent.com";
+    const CLIENT_ID = "340784962837-tv2a1qh23m3f2jk7282qjai54eo0nvvq.apps.googleusercontent.com";
 
     const isAdmin = useAdminCheck();
 
